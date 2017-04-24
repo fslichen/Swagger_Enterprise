@@ -53,9 +53,11 @@ import evolution.yml.Yml;
 public class SwaggerFactory {
 	public static final String DEFINITIONS = "#/definitions/";
 
-	public static void swaggers(String basePackagePath, String destinationPath, DefaultSwagger defaultSwagger) {
+	public static void swaggers(String basePackageName, String destinationPath, DefaultSwagger defaultSwagger) {
+		String basePackagePath = System.getProperty("user.dir") + "/src/main/java/" + basePackageName.replace('.', '/');
+		String mainJavaPath = basePackagePath.substring(0, Str.backIndexOf(basePackagePath, '/', Str.count(basePackageName, '.') + 1));
 		List<Class<?>> classes = new LinkedList<>();
-		classes = FileUtil.classes(basePackagePath, Arrays.asList(RestController.class, Controller.class), classes);
+		classes = FileUtil.classes(basePackagePath, mainJavaPath, Arrays.asList(RestController.class, Controller.class), classes);
 		for (Class<?> clazz : classes) {
 			swagger(clazz, destinationPath + "/" + clazz.getSimpleName() + ".yaml", defaultSwagger);
 		}
